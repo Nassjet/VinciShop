@@ -613,6 +613,15 @@
     <meta name="msapplication-TileImage" content="https://wp31-c12769-2.btsndrc.ac/wp-content/uploads/2023/02/cropped-logo-ldv-270x270.png">
 </head>
 <body class="page-template-default page wp-embed-responsive has-header-image page-one-column colors-custom customize-support">
+    @if (session('success'))
+    <div id="notif"
+        class="fixed-bottom rounded-pill bg-primary border border-1 border-dark mx-2 my-3 col-6 col-lg-3">
+        <div class="fs-5 col align-center m-2">
+            <i class="bi bi-bell px-2"></i>
+            {{ session('success') }}
+        </div>
+    </div>
+    @endif
 @yield('content')
 
 <footer id="colophon" class="site-footer mt-2">

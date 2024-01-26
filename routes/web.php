@@ -3,6 +3,10 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\AdminProduitController;
+use App\Http\Controllers\AdminFournisseurController;
+use App\Http\Controllers\AdminCategorieController;
+use App\Http\Controllers\VisiteurProduitController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,3 +30,8 @@ Route::get('/logout', [AdminController::class, 'logout'])->middleware('auth')->n
 Route::post('/admin/traite', [AdminController::class, 'traite'])->middleware('auth')->name('admin.traite');
 
 //Route::get('/createCreds', [AdminController::class, 'createCreds'])->name('createCreds');
+
+Route::resource('/admin/produit',AdminProduitController::class);
+Route::resource('/admin/fournisseur',AdminFournisseurController::class);
+Route::resource('/admin/categorie',AdminCategorieController::class);
+Route::resource('/visiteur/produit',VisiteurProduitController::class);
