@@ -39,12 +39,13 @@ class AdminFournisseurController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $attributs = $request->validate([
             "nom" => "required|string|min:2|max:255",
             "adresse" => "required|min:0|string",
             "ville" => "required|min:0|string",
             "email"=> "required|min:0|email",
-            "tel" => "required|min:0|numeric", // Syntaxe corrigée ici
+            "tel" => "required|min:0|numeric",
         ]);
 
         $fournisseur= Fournisseur::create($attributs);
@@ -71,7 +72,8 @@ class AdminFournisseurController extends Controller
      */
     public function edit(Fournisseur $fournisseur)
     {
-        //
+        // Pas besoin de récupérer tous les fournisseurs, juste celui que vous voulez modifier
+        return view('admin.fournisseur.edit', compact('fournisseur'));
     }
 
     /**
@@ -83,7 +85,20 @@ class AdminFournisseurController extends Controller
      */
     public function update(Request $request, Fournisseur $fournisseur)
     {
-        //
+        $attributs = $request->validate([
+            "nom" => "required|string|min:2|max:255",
+            "adresse" => "required|string|max:255",
+            "ville" => "required|string|max:255",
+            "email" => "required|email|max:255",
+            "telephone" => "required|string|max:255", // Format du téléphone à ajuster selon vos besoins
+        ]);
+
+        // Logique pour mettre à jour le fournisseur...
+
+
+        $fournisseur->update($attributs);
+        session()->flash("success", "Le fournisseur " . $fournisseur->nom . " a été mis à jour !");
+        return redirect("admin/fournisseur");
     }
 
     /**
@@ -94,6 +109,8 @@ class AdminFournisseurController extends Controller
      */
     public function destroy(Fournisseur $fournisseur)
     {
-        //
+        $fournisseur->delete();
+        session()->flash("success", "Suppression réussie");
+        return redirect("/admin/fournisseur");
     }
 }

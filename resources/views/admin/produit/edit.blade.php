@@ -6,7 +6,7 @@
 <main class="container">
     <div class="row">
         <div class="col-12 col-sm-10 col-md-6 col-lg-4 mx-auto">
-            <h1 class="my-1">Formulaire de modification</h1>
+            <h1 class="my-1">Formulaire de modification d'un produit</h1>
             <form action="/admin/produit/{{$produit->id}}" method="post">
                 @csrf
                 @method('put')

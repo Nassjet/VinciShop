@@ -4,7 +4,7 @@
 <main class='container'>
     <h1>Tableau d'administration des fournisseurs</h1>
     <div class="row">
-        <a href="create" class="btn btn.primary">Ajouter un nouveau fournisseur</a>
+        <a href="/admin/fournisseur/create" class="btn btn.primary">Ajouter un nouveau fournisseur</a>
     </div>
     <div class="row my-3">
         <table class="table table-striped">

@@ -24,7 +24,7 @@
                 <div class='row mb-2'>
                     <label for='adresse'>Adresse :</label>
                     <input value='{{ old('adresse') }}' name='adresse' required type='text' class="form-control"
-                         placeholder="Saisir l'adresse">
+                        placeholder="Saisir l'adresse">
                     @error('adresse')
                         <div class='alert alert-danger mt-1'>{{ $message }}</div>
                     @enderror
@@ -32,7 +32,7 @@
                 <div class='row mb-2'>
                     <label for='ville'>Ville</label>
                     <input value='{{ old('ville') }}' name='ville' required type='text' class="form-control"
-                         placeholder="Saisir la ville">
+                        placeholder="Saisir la ville">
                     @error('ville')
                         <div class='alert alert-danger mt-1'>{{ $message }}</div>
                     @enderror
@@ -40,18 +40,16 @@
                 <div class='row mb-2'>
                     <label for='email'>Email :</label>
                     <input value='{{ old('email') }}' name='email' required type='email' class="form-control"
-                         placeholder="Saisir le email">
+                        placeholder="Saisir le email">
                     @error('email')
                         <div class='alert alert-danger mt-1'>{{ $message }}</div>
                     @enderror
                 </div>
                 <div class='row mb-2'>
-                    <label for='telephone'>Telephone :</label>
-                    <input value='{{ old('telephone') }}' name='telephone' required type='tel'
-                         class="form-control" id="telephone"
-                        placeholder="Saisir le numéro de téléphone">
-                    </textarea>
-                    @error('telephone')
+                    <label for='tel'>Téléphone :</label>
+                    <input value='{{ old('tel') }}' name='tel' required type='tel' class="form-control"
+                           id="tel" placeholder="Saisir le numéro de téléphone">
+                    @error('tel')
                         <div class='alert alert-danger mt-1'>{{ $message }}</div>
                     @enderror
                 </div>

@@ -66,7 +66,7 @@ class AdminCategorieController extends Controller
      */
     public function edit(Categorie $categorie)
     {
-        //
+        // Inutile
     }
 
     /**
@@ -78,7 +78,7 @@ class AdminCategorieController extends Controller
      */
     public function update(Request $request, Categorie $categorie)
     {
-        //
+        // inutile
     }
 
     /**
@@ -89,6 +89,8 @@ class AdminCategorieController extends Controller
      */
     public function destroy(Categorie $categorie)
     {
-        //
+        $categorie->delete();
+        session()->flash("success", "Suppression réussie");
+        return redirect("/admin/categorie");
     }
 }

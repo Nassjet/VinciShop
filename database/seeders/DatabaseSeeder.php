@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Categorie;
 use App\Models\Fournisseur;
 use App\Models\Produit;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -36,5 +38,20 @@ class DatabaseSeeder extends Seeder
             "categorie_id" => $cat1->id,
             "fournisseur_id" => $fournisseur1->id,
         ]);
+        $roleAdmin=Role::create(["nom"=>"admin"]);
+        $roleClient=Role::create(["nom"=>"client"]);
+
+        $user1 = User::create([
+            "name" => "admin",
+            "prenom" => "admin",
+            "adresse" => "123 Rue Exemple",
+            "ville" => "VilleExemple",
+            "tel" => "0123456789",
+            "email" => "email@example.com",
+            "password" => bcrypt("password@example.com"), // Il est important de hasher le mot de passe
+            "role_id" => $roleAdmin->id // Assurez-vous que ce rôle existe dans votre table `roles`
+        ]);
+
+
     }
 }

@@ -32,14 +32,24 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'prenom' => ['required', 'string', 'max:255'], // Ajout de la validation pour 'prenom'
+            'adresse' => ['required', 'string', 'max:255'], // Ajout de la validation pour 'adresse'
+            'ville' => ['required', 'string', 'max:255'], // Ajout de la validation pour 'ville'
+            'tel' => ['required', 'string', 'max:255'], // Ajout de la validation pour 'tel'
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+
         $user = User::create([
             'name' => $request->name,
+            'prenom' => $request->prenom, // Ajout de 'prenom'
+            'adresse' => $request->adresse, // Ajout de 'adresse'
+            'ville' => $request->ville, // Ajout de 'ville'
+            'tel' => $request->tel, // Ajout de 'tel'
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => 2, // Assurez-vous que ce rôle existe dans votre table `roles`
         ]);
 
         event(new Registered($user));
