@@ -8,7 +8,7 @@
             <h1>Formulaire d'ajout d'un produit</h1>
         </div>
         <div class="row">
-            <form class="col-lg-3 col-md-6 col-8 mx-auto" action="/admin/produit" method="post">
+            <form enctype="multipart/form-data" class="col-lg-3 col-md-6 col-8 mx-auto" action="/admin/produit" method="post">
                 @method('post')
                 @csrf
                 <div class='row mb-2'>
@@ -81,7 +81,13 @@
                         </div>
                     @enderror
                 </div>
-
+<div class='row mb-2'>
+    <label for='lienImage'>Image *</label>
+        <input accept="image/*" value='{{old("lienImage")}}' name='lienImage' required type='file' class="form-control" id="imageProduit" placeholder="Indiquer une Image">
+    @error('lienImage')
+        <div class='alert alert-danger mt-1'>{{message}}</div>
+    @enderror
+</div>
                 <div class="row">
                     <button class="btn-primary">Envoyer</button>
                 </div>

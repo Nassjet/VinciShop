@@ -15,7 +15,7 @@ class VisiteurProduitController extends Controller
      */
     public function index()
     {
-        $produits=DB::table('produits')->simplePaginate(1);
+        $produits=DB::table('produits')->simplePaginate(10);
         return view("visiteur.produit.index",["lesProduits"=>$produits]);
     }
 
@@ -42,6 +42,7 @@ class VisiteurProduitController extends Controller
      */
     public function show($id)
     {
+        $produit = Produit::find($id);
         return view("admin.produit.show", ['unProduit' => $produit]);
     }
 

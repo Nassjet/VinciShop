@@ -25,17 +25,19 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [MainController::class, 'index'])->name('index');
-Route::get('/products', [MainController::class, 'products'])->name('products');
-Route::get('/products/{id}', [MainController::class, 'product'])->name('product');
+Route::get('/produits', [MainController::class, 'products'])->name('products');
+Route::get('/visiteur/produit/{id}', [MainController::class, 'product'])->name('product');
 Route::get('/infos', [MainController::class, 'infos'])->name('infos');
+Route::get('/precommandes', [VisiteurProduitController::class, 'index'])->name('precommandes');
+
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
 Route::post('/cart', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/cart/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
-Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-Route::post('/cart/checkout', [CartController::class, 'checkoutSend'])->name('cart.checkout');
+// Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::get('/cart/checkout', [CartController::class, 'checkoutSend'])->name('cart.checkout');
 
 // Route::get('/login', [AdminController::class, 'login'])->name('login');
 // Route::post('/login', [AdminController::class, 'loginSend'])->name('login.send');

@@ -187,7 +187,7 @@
 
                                         <div class="is-layout-flex wp-block-buttons">
                                             <div class="wp-block-button aligncenter">
-                                                <a class="wp-block-button__link has-luminous-vivid-orange-background-color has-background wp-element-button" href="{{ route('products') }}">Précommandes</a>
+                                                <a class="wp-block-button__link has-luminous-vivid-orange-background-color has-background wp-element-button" href="{{ route('precommandes') }}">Précommandes</a>
                                             </div>
                                         </div>
 

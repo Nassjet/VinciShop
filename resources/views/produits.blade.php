@@ -66,9 +66,9 @@
                                     </a>
                                 </li>
                                 @auth()
-                                    <li>
+                                    {{-- <li>
                                         <a href="{{ route('admin.index') }}">Admin</a>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a href="{{ route('logout') }}">Déconnexion</a>
                                     </li>

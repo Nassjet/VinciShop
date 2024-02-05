@@ -50,4 +50,7 @@ class User extends Authenticatable
     public function role() {
         return $this->belongsTo(Role::class,"role_id");
     }
+    public function commandes(){
+        return $this->hasMany(Commande::class, 'utilisateur');
+    }
 }

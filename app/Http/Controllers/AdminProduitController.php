@@ -49,7 +49,9 @@ class AdminProduitController extends Controller
             "qteEnStock"=> "required|min:0|numeric",
             "categorie_id" => "required|exists:categories,id",
             "fournisseur_id" => "required|exists:fournisseurs,id", // Corrigé ici
+            "lienImage" => "required|image"
         ]);
+        $attributs["lienImage"]=$request->file('lienImage')->store("images/products");
 
         $produit = Produit::create($attributs);
         session()->flash("success", "Le produit " . $produit->nom . " a été ajouté !");

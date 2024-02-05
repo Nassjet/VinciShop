@@ -66,9 +66,9 @@
                                     </a>
                                 </li>
                                 @auth()
-                                    <li>
+                                    {{-- <li>
                                         <a href="{{ route('admin.index') }}">Admin</a>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a href="{{ route('logout') }}">Déconnexion</a>
                                     </li>
@@ -92,18 +92,18 @@
                     <div class="col-6">
                         <div class="row">
                             <div class="col">
-                                <img src="{{ asset('storage/images/products/' . $produit->image) }}" alt="{{ $produit->name }}" width="100%" class="img-thumbnail">
+                                <img src="{{ asset('storage/' . $produit->lienImage) }}" alt="{{ $produit->name }}" width="100%" class="img-thumbnail">
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="row">
                             <div class="col">
-                                @if($produit->qte == 0)
+                                {{-- @if($produit->qteEnStock == 0)
                                     <div class="alert alert-danger text-center" role="alert">
                                         Ce produit est actuellement indisponible
                                     </div>
-                                @else
+                                @else --}}
                                 <form action="{{ route('cart.add') }}" method="post">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $produit->id }}">
@@ -115,7 +115,7 @@
 
                                     <button type="submit" class="btn btn-primary mt-3" style="border: none">Ajouter au panier</button>
                                 </form>
-                                @endif
+                                {{-- @endif --}}
                             </div>
                         </div>
                     </div>

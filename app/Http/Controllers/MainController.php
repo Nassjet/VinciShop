@@ -20,14 +20,14 @@ class MainController extends Controller {
     {
         $produits = Produit::get();
 
-        return view('products', ['produits' => $produits]);
+        return view('produits', ['produits' => $produits]);
     }
 
     public function product($id): Factory|View|Application
     {
         $produit = Produit::find($id);
 
-        return view('product', ['produit' => $produit]);
+        return view('produit', ['produit' => $produit]);
     }
 
     public function infos(): Factory|View|Application

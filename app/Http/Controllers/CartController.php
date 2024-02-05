@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\CommandSuccess;
 use App\Models\Commande;
+use App\Models\LignesCommande;
 use App\Models\Produit;
+use App\Models\Reservation;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -17,8 +20,8 @@ class CartController extends Controller {
     {
         $cart = session()->get('cart', []);
         $total = 0;
-        foreach ($cart as $produit) {
-            $total += $produit['prix'] * $produit['quantite'];
+        foreach ($cart as $ligneProduit) {
+            $total += $ligneProduit['prix'] * $ligneProduit['quantite'];
         }
 
         return view('cart', ['cart' => $cart, 'total' => $total]);
@@ -26,29 +29,31 @@ class CartController extends Controller {
 
     public function add(Request $request): RedirectResponse
     {
-        $produit = Produit::findOrFail($request->id);
-        $quantite = $request->quantite;
+        $form=$request->validate(['id'=>"required|exists:produits,id",'quantite'=>'required|min:1|numeric|max:50']);
 
+        $ligneProduit = Produit::findOrFail($form["id"]);
+        $quantite = $form["quantite"];
         $cart = session()->get('cart', []);
-        $cart[$produit->id] = [
-            'id' => $produit->id,
-            'nom' => $produit->nom,
-            'prix' => $produit->prix,
+
+        $cart[$ligneProduit->id] = [
+            'id' => $ligneProduit->id,
+            'prix' => $ligneProduit->prix,
+            'nom'=>$ligneProduit->nom,
             'quantite' => $quantite,
-            'qte' => $produit->qte,
         ];
         session()->put('cart', $cart);
-
         return redirect()->route('cart');
     }
 
     public function update(Request $request): RedirectResponse
     {
-        $produit = Produit::findOrFail($request->id);
-        $quantite = $request->quantite;
+        $form=$request->validate(['id'=>"required|exists:produits,id",'quantite'=>'required|min:1|numeric|max:50']);
+
+        $ligneProduit = Produit::findOrFail($form["id"]);
+        $quantite = $form["quantite"];
 
         $cart = session()->get('cart', []);
-        $cart[$produit->id]['quantite'] = $quantite;
+        $cart[$ligneProduit->id]['quantite'] = $quantite;
         session()->put('cart', $cart);
 
         return redirect()->route('cart');
@@ -56,9 +61,9 @@ class CartController extends Controller {
 
     public function remove(Request $request): RedirectResponse
     {
-        $produit = Produit::findOrFail($request->id);
+        $ligneProduit = Produit::findOrFail($request->id);
         $cart = session()->get('cart', []);
-        unset($cart[$produit->id]);
+        unset($cart[$ligneProduit->id]);
         session()->put('cart', $cart);
 
         return redirect()->route('cart');
@@ -75,8 +80,8 @@ class CartController extends Controller {
     {
         $cart = session()->get('cart', []);
         $total = 0;
-        foreach ($cart as $produit) {
-            $total += $produit['prix'] * $produit['quantite'];
+        foreach ($cart as $ligneProduit) {
+            $total += $ligneProduit['prix'] * $ligneProduit['quantite'];
         }
 
         if ($cart == null) {
@@ -88,50 +93,97 @@ class CartController extends Controller {
 
     public function checkoutSend(Request $request): RedirectResponse
     {
-        $request->validate([
-            'nom' => array(
-                'required',
-                'regex:/^[A-Za-zÀ-ÖØ-ö\s]+$/',
-                'max:40'
-            ),
-            'prenom' => array(
-                'required',
-                'regex:/^[A-Za-zÀ-ÖØ-ö\s]+$/',
-                'max:40'
-            ),
-            'email' => 'required|email|max:40',
-        ]);
-
+        // $request->validate([
+        //     'nom' => array(
+        //         'required',
+        //         'regex:/^[A-Za-zÀ-ÖØ-ö\s]+$/',
+        //         'max:40'
+        //     ),
+        //     'prenom' => array(
+        //         'required',
+        //         'regex:/^[A-Za-zÀ-ÖØ-ö\s]+$/',
+        //         'max:40'
+        //     ),
+        //     'email' => 'required|email|max:40',
+        // ]);
         $cart = session()->get('cart');
+        //TODO verification panier
+
+        $utilisateur=auth()->user();
+        $commande = Commande::create(["etat"=>"En préparation","utilisateur_id"=>$utilisateur->id]);
+
+
         $total = 0;
-        foreach ($cart as $produit) {
-            $total += $produit['prix'] * $produit['quantite'];
-            $p = Produit::findOrFail($produit['id']);
-            $reste = $produit['qte'] - $produit['quantite'];
-            if ($reste < 0) {
-                session()->forget('cart');
-                return redirect()->route('cart')->withErrors(['error', 'Un produit est en rupture de stock']);
-            } else {
-                $p->qte = $reste;
-                $p->save();
-            }
+        foreach ($cart as $ligneProduit) {
+        $produit=Produit::findOrFail($ligneProduit["id"]);
+        $reste = $produit->qteEnStock - $ligneProduit['quantite'];
+        if($produit->qteEnStock<0){
+            //Affecte pas le prix
+            // créer les reservation
+        //Créer une reservation avec le reste
+      Reservation::create([
+        "quantite"=> $ligneProduit['quantite'],
+        "etat"=>"En attente",
+        "produit_id"=>$produit->id,
+        "commande_id"=>$commande->id
+      ]);
         }
 
-        $commande = new Commande();
-        $commande->nom = $request->nom;
-        $commande->prenom = $request->prenom;
-        $commande->email = $request->email;
-        $commande->panier = json_encode($cart);
-        $commande->total = $total;
-        $commande->etat = 'En attente';
-        $commande->save();
+        else if($reste<0){
+            $quantiteCommande= $produit->qteEnStock;
+            LignesCommande::create([
+                "quantite"=>$quantiteCommande,
+                "commande_id"=>$commande->id,
+                "produit_id"=>$produit->id
+            ]);
+            //Créer une reservation avec le reste
+            Reservation::create([
+                "quantite"=> -$reste,
+                "etat"=>"En attente",
+                "produit_id"=>$produit->id,
+                "commande_id"=>$commande->id
+              ]);
+            // Pour le total a verifier si les reservations son payer avec la commande ou séparement
+            $total += $ligneProduit['prix'] * $quantiteCommande;
+
+        }
+        else {
+            $total += $ligneProduit['prix'] * $ligneProduit['quantite'];
+            LignesCommande::create([
+                "quantite"=>$ligneProduit['quantite'],
+                "commande_id"=>$commande->id,
+                "produit_id"=>$produit->id
+            ]);
+        }
+        $produit->qteEnStock-=$ligneProduit['quantite'];
+        $produit->save();
+
+
+
+        //     $total += $ligneProduit['prix'] * $ligneProduit['quantite']; //1
+        //     $p = Produit::findOrFail($ligneProduit['id']);
+        //     $reste = $produit->qteEnStock - $ligneProduit['quantite'];
+        //     if ($reste < 0) {
+        //         $quantiteCommande=$ligneProduit['quantite']+$reste;//3
+        //         session()->forget('cart');
+        //         return redirect()->route('cart')->withErrors(['error', 'Un produit est en rupture de stock']);
+        //     } else {
+        //         $quantiteCommande=$ligneProduit['quantite'];
+        //         $p->qte = $reste;
+        //         $p->save();
+        //     }
+        // }
+
+
+
 
         session()->forget('cart');
         session()->put('success', true);
 
-        Mail::to($request->email)->send(new CommandSuccess($request->email, json_encode($cart), $total));
+        // Mail::to($request->email)->send(new CommandSuccess($utilisateur->email, json_encode($cart), $total));
 
         return redirect()->route('index');
     }
 
+}
 }
