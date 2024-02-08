@@ -17,7 +17,7 @@ class Produit extends Model
         return $this->belongsTo(Fournisseur::class,"fournisseur_id");
     }
     public function lignes(){
-        return $this->belongsToMany(Produit::class, 'lignes_commandes')->using(LignesCommande::class)->withPivot("quantite")->withTimestamps();
+        return $this->belongsToMany(Produit::class, 'lignes_commandes')->withPivot("quantite")->withTimestamps();
     }
     public function reservations(){
         return $this->hasMany(Reservation::class, 'produit_id');

@@ -9,6 +9,10 @@ class Reservation extends Model
 {
     use HasFactory;
     protected $guarded=["id"];
+    public function prix(){
+        $resultat = $this->produit->prix*$this->quantite;
+        return $resultat;
+    }
     public function commande(){
         return $this->belongsTo(Commande::class,"commande_id");
     }

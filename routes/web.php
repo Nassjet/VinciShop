@@ -7,6 +7,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\AdminProduitController;
 use App\Http\Controllers\AdminFournisseurController;
 use App\Http\Controllers\AdminCategorieController;
+use App\Http\Controllers\ClientCommandeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VisiteurProduitController;
 use App\Http\Middleware\AdminOnly;
@@ -25,10 +26,10 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', [MainController::class, 'index'])->name('index');
-Route::get('/produits', [MainController::class, 'products'])->name('products');
+
 Route::get('/visiteur/produit/{id}', [MainController::class, 'product'])->name('product');
 Route::get('/infos', [MainController::class, 'infos'])->name('infos');
-Route::get('/precommandes', [VisiteurProduitController::class, 'index'])->name('precommandes');
+
 
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
@@ -54,9 +55,7 @@ Route::resource('/visiteur/produit',VisiteurProduitController::class);
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [ClientCommandeController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -68,4 +67,4 @@ require __DIR__.'/auth.php';
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home',  [ClientCommandeController::class,"index"])->middleware(['auth', 'verified'])->name('home');

@@ -49,16 +49,7 @@
     <link rel="shortlink" href="">
     <link rel="alternate" type="application/json+oembed" href="">
     <link rel="alternate" type="text/xml+oembed" href="">
-    <style type="text/css" id="custom-theme-colors">
 
-        /**
-         * Twenty Seventeen: Color Patterns
-         *
-         * Colors are ordered from dark to light.
-         */
-
-
-        }	</style>
     <link rel="icon" href="" sizes="32x32">
     <link rel="icon" href="" sizes="192x192">
     <link rel="apple-touch-icon" href="" >
@@ -86,12 +77,48 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
+                        @guest
                         <li class="nav-item">
                             <a class="nav-link" href="/login">Se connecter</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/register">S'enregistrer</a>
                         </li>
+                        @endguest
+                        <li class="nav-item">
+                            <a class="nav-link" href="/visiteur/produit">Nos Produits</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cart">Votre Panier</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/infos">Infos</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+
+                        @auth
+                        @if (auth()->user()->role->nom=="admin")
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Admin
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="/admin/produit">Dashboard Produits</a></li>
+                              <li><a class="dropdown-item" href="/admin/fournisseur">Dashboard Fournisseurs</a></li>
+                              <li><a class="dropdown-item" href="/admin/categorie">Dashboard Categories</a></li>
+                              <li><a class="dropdown-item" href="/admin/commande/recent">Les commandes récentes </a></li>
+                              <li><a class="dropdown-item" href="/admin/commande">Toutes les commandes </a></li>
+                            </ul>
+                          </li>
+                        @endif
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                @csrf
+                                <button class="nav-link">Logout</button>
+                            </form>
+                        </li>
+                        @endauth
                     </ul>
                 </div>
             </div>
