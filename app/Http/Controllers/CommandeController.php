@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Commande;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommandeController extends Controller
 {
@@ -14,7 +15,15 @@ class CommandeController extends Controller
      */
     public function index()
     {
-        //
+        $commandes = DB::table('commandes')->simplePaginate(20);
+        //TODO return une vue qui affiche les commandes
+    }
+
+    public function enPreparation()
+    {
+        $commandes = DB::table('commandes')->where("etat","=","En préparation")->simplePaginate(20);
+
+        //TODO return une vue qui affiche les commandes
     }
 
     /**
